@@ -1,0 +1,17 @@
+{
+  "name": "SocialEarn - Earn Money from Social Media Tasks",
+  "short_name": "SocialEarn",
+  "description": "Complete social media tasks and earn real money.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
