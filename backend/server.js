@@ -22,9 +22,6 @@ const notificationRoutes = require('./routes/notifications');
 const leaderboardRoutes = require('./routes/leaderboard');
 const adminRoutes = require('./routes/admin');
 
-connectDB();
-connectCloudinary();
-
 const app = express();
 const httpServer = createServer(app);
 
@@ -87,9 +84,13 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT || 5000;
-httpServer.listen(PORT, () => {
-  console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
-});
+if (require.main === module) {
+  connectDB();
+  connectCloudinary();
+  const PORT = process.env.PORT || 5000;
+  httpServer.listen(PORT, () => {
+    console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
+  });
+}
 
 module.exports = { app, httpServer, io };
