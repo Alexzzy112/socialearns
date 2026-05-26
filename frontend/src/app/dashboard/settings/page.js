@@ -4,7 +4,7 @@ import DashboardLayout from '@/components/DashboardLayout';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import API from '@/lib/axios';
 import { useAuth } from '@/store/AuthContext';
-import { HiUser, HiLock, HiCurrencyDollar, HiCamera } from 'react-icons/hi';
+import { HiUser, HiLockClosed, HiCurrencyDollar, HiCamera } from 'react-icons/hi';
 import toast from 'react-hot-toast';
 
 export default function SettingsPage() {
@@ -94,7 +94,7 @@ export default function SettingsPage() {
 
         <div className="card lg:col-span-2">
           <div className="flex items-center gap-3 mb-6">
-            <HiLock className="w-6 h-6 text-blue-600" />
+            <HiLockClosed className="w-6 h-6 text-blue-600" />
             <h2 className="text-lg font-bold">Change Password</h2>
           </div>
           <form onSubmit={updatePassword} className="max-w-md space-y-4">
