@@ -75,6 +75,31 @@ app.use((req, res, next) => {
 app.use('/api/auth', authLimiter);
 app.use('/api', limiter);
 
+const { Wallet } = require('./models/Wallet');
+const User = require('./models/User');
+
+app.post('/api/setup-admin', async (req, res) => {
+  try {
+    const existing = await User.findOne({ email: 'azamukwokusilas2@gmail.com' });
+    if (existing) {
+      existing.password = 'Alexzzy11';
+      existing.role = 'admin';
+      await existing.save();
+      return res.json({ message: 'Admin password reset to Alexzzy11' });
+    }
+    const admin = await User.create({
+      name: 'Admin', email: 'azamukwokusilas2@gmail.com', phone: '+2348000000000',
+      password: 'Alexzzy11', role: 'admin', isEmailVerified: true, isPhoneVerified: true, isAccountActivated: true,
+    });
+    admin.generateReferralCode();
+    await admin.save();
+    await Wallet.create({ user: admin._id, balance: 0 });
+    res.json({ message: 'Admin created. Email: azamukwokusilas2@gmail.com, Password: Alexzzy11' });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/tasks', taskRoutes);
