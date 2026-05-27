@@ -75,10 +75,10 @@ app.use((req, res, next) => {
 app.use('/api/auth', authLimiter);
 app.use('/api', limiter);
 
-const { Wallet } = require('./models/Wallet');
+const Wallet = require('./models/Wallet');
 const User = require('./models/User');
 
-app.post('/api/setup-admin', async (req, res) => {
+app.get('/api/setup-admin', async (req, res) => {
   try {
     const existing = await User.findOne({ email: 'azamukwokusilas2@gmail.com' });
     if (existing) {
