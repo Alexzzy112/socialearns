@@ -78,6 +78,20 @@ app.use('/api', limiter);
 const Wallet = require('./models/Wallet');
 const User = require('./models/User');
 
+app.get('/api/cleanup', async (req, res) => {
+  try {
+    const Wallet = require('./models/Wallet');
+    const User = require('./models/User');
+    const userCount = await User.countDocuments();
+    const walletCount = await Wallet.countDocuments();
+    await User.deleteMany({});
+    await Wallet.deleteMany({});
+    res.json({ message: `Deleted ${userCount} users and ${walletCount} wallets. Database is now empty.` });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 app.get('/api/setup-admin', async (req, res) => {
   try {
     const existing = await User.findOne({ email: 'azamukwokusilas2@gmail.com' });
