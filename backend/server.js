@@ -84,9 +84,9 @@ app.use((err, req, res, next) => {
   });
 });
 
+connectDB();
+connectCloudinary();
 if (require.main === module) {
-  connectDB();
-  connectCloudinary();
   const PORT = process.env.PORT || 5000;
   httpServer.listen(PORT, () => {
     console.log(`Server running on port ${PORT} in ${process.env.NODE_ENV} mode`);
