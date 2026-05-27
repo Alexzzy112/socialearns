@@ -59,6 +59,19 @@ app.use(cors({ origin: process.env.SITE_URL || '*', credentials: true }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
+
+app.use((req, res, next) => {
+  if (mongoose.connection.readyState === 1) return next();
+  let responded = false;
+  const timeout = setTimeout(() => {
+    responded = true;
+    res.status(503).json({ message: 'Database connecting. Refresh to try again.' });
+  }, 20000);
+  mongoose.connection.once('connected', () => {
+    if (!responded) { clearTimeout(timeout); next(); }
+  });
+});
+
 app.use('/api/auth', authLimiter);
 app.use('/api', limiter);
 
@@ -92,14 +105,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-(async () => {
-  try {
-    await connectDB();
-    console.log('MongoDB connected successfully');
-  } catch (err) {
-    console.error('Fatal: MongoDB failed to connect:', err.message);
-  }
-})();
+connectDB().catch(err => console.error('DB connection error:', err));
 connectCloudinary();
 if (require.main === module) {
   const PORT = process.env.PORT || 5000;
