@@ -93,4 +93,6 @@ if (require.main === module) {
   });
 }
 
-module.exports = { app, httpServer, io };
+module.exports = app;
+module.exports.httpServer = httpServer;
+module.exports.io = io;
