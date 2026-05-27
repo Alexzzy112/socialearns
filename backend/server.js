@@ -84,7 +84,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-connectDB();
+connectDB().catch(err => console.error('DB connection error:', err));
 connectCloudinary();
 if (require.main === module) {
   const PORT = process.env.PORT || 5000;
