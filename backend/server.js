@@ -6,6 +6,7 @@ const rateLimit = require('express-rate-limit');
 const { createServer } = require('http');
 const { Server } = require('socket.io');
 const path = require('path');
+const mongoose = require('mongoose');
 require('dotenv').config();
 
 const connectDB = require('./config/db');
@@ -73,7 +74,14 @@ app.use('/api/leaderboard', leaderboardRoutes);
 app.use('/api/admin', adminRoutes);
 
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', message: 'Social Earn API is running' });
+  const dbState = mongoose.connection.readyState;
+  const states = ['disconnected', 'connected', 'connecting', 'disconnecting'];
+  res.json({ 
+    status: 'OK', 
+    message: 'Social Earn API is running',
+    dbConnected: dbState === 1,
+    dbState: states[dbState] || 'unknown'
+  });
 });
 
 app.use((err, req, res, next) => {
@@ -84,7 +92,14 @@ app.use((err, req, res, next) => {
   });
 });
 
-connectDB().catch(err => console.error('DB connection error:', err));
+(async () => {
+  try {
+    await connectDB();
+    console.log('MongoDB connected successfully');
+  } catch (err) {
+    console.error('Fatal: MongoDB failed to connect:', err.message);
+  }
+})();
 connectCloudinary();
 if (require.main === module) {
   const PORT = process.env.PORT || 5000;
