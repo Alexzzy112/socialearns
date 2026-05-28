@@ -13,6 +13,7 @@ const {
   getAllUsers,
   getUserById,
   suspendUser,
+  deleteUser,
   activateUserAccount,
   creditUser,
   getAllWithdrawals,
@@ -47,6 +48,7 @@ router.get('/users/:id', getUserById);
 router.put('/users/:id/suspend', suspendUser);
 router.put('/users/:id/activate', activateUserAccount);
 router.put('/users/:id/credit', creditUser);
+router.delete('/users/:id', deleteUser);
 
 router.get('/withdrawals', getAllWithdrawals);
 router.put('/withdrawals/:id/approve', approveWithdrawal);

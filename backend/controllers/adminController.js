@@ -473,6 +473,25 @@ const deleteDeposit = async (req, res) => {
   }
 };
 
+const deleteUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) return res.status(404).json({ message: 'User not found' });
+    if (user.role === 'admin') return res.status(403).json({ message: 'Cannot delete admin accounts' });
+
+    await Wallet.deleteOne({ user: user._id });
+    await Deposit.deleteMany({ user: user._id });
+    await Withdrawal.deleteMany({ user: user._id });
+    await Submission.deleteMany({ user: user._id });
+    await Notification.deleteMany({ user: user._id });
+    await User.findByIdAndDelete(user._id);
+
+    res.json({ message: 'User deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const sendAnnouncement = async (req, res) => {
   try {
     const { title, content, type } = req.body;
@@ -560,6 +579,7 @@ module.exports = {
   getAllUsers,
   getUserById,
   suspendUser,
+  deleteUser,
   activateUserAccount,
   creditUser,
   getAllWithdrawals,
