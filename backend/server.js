@@ -65,11 +65,13 @@ app.use((req, res, next) => {
   let responded = false;
   const timeout = setTimeout(() => {
     responded = true;
-    res.status(503).json({ message: 'Database connecting. Refresh to try again.' });
-  }, 20000);
-  mongoose.connection.once('connected', () => {
+    res.status(503).json({ message: 'Database connecting. Please wait and refresh.' });
+  }, 40000);
+  const onConnected = () => {
     if (!responded) { clearTimeout(timeout); next(); }
-  });
+  };
+  if (mongoose.connection.readyState === 1) return onConnected();
+  mongoose.connection.once('connected', onConnected);
 });
 
 app.use('/api/auth', authLimiter);
