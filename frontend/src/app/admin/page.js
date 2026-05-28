@@ -39,13 +39,14 @@ export default function AdminDashboard() {
   if (!user || user.role !== 'admin') return null;
   if (loading) return <DashboardLayout><LoadingSpinner /></DashboardLayout>;
 
+  const s = data?.stats || {};
   const stats = [
-    { icon: HiUsers, label: 'Total Users', value: data?.totalUsers, color: 'blue' },
-    { icon: HiUsers, label: 'Active Users', value: data?.activeUsers, color: 'green' },
-    { icon: HiCollection, label: 'Pending Submissions', value: data?.pendingSubmissions, color: 'yellow' },
-    { icon: HiCurrencyDollar, label: 'Pending Withdrawals', value: data?.pendingWithdrawals, color: 'red' },
-    { icon: HiCash, label: 'Pending Deposits', value: data?.pendingDeposits, color: 'purple' },
-    { icon: HiChartBar, label: 'Total Earnings', value: data?.totalEarnings, color: 'indigo' },
+    { icon: HiUsers, label: 'Total Users', value: s.totalUsers, color: 'blue' },
+    { icon: HiUsers, label: 'Active Users', value: s.activeUsers, color: 'green' },
+    { icon: HiCollection, label: 'Pending Submissions', value: s.pendingSubmissions, color: 'yellow' },
+    { icon: HiCurrencyDollar, label: 'Pending Withdrawals', value: s.pendingWithdrawals, color: 'red' },
+    { icon: HiCash, label: 'Pending Deposits', value: s.pendingDeposits, color: 'purple' },
+    { icon: HiChartBar, label: 'Total Earnings', value: s.totalEarnings, color: 'indigo' },
   ];
 
   const quickActions = [
