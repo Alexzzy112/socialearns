@@ -12,6 +12,7 @@ const depositSchema = new mongoose.Schema(
       default: 'pending',
     },
     isActivationFee: { type: Boolean, default: false },
+    narration: { type: String },
     screenshot: { type: String },
     bankName: { type: String },
     paystackResponse: { type: Object },

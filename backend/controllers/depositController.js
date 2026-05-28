@@ -114,12 +114,10 @@ const createManualDeposit = async (req, res) => {
     if (!amount || amount < 100) {
       return res.status(400).json({ message: 'Minimum deposit is N100' });
     }
-    if (!req.file) {
-      return res.status(400).json({ message: 'Payment receipt screenshot is required' });
-    }
 
     const reference = 'MAN-' + Date.now() + '-' + Math.random().toString(36).substring(2, 8).toUpperCase();
     const isActivation = parseInt(amount) >= parseInt(process.env.ACTIVATION_FEE || '1500');
+    const narration = `Payment for wallet funding - N${parseInt(amount).toLocaleString()} - ${reference}`;
 
     const deposit = await Deposit.create({
       user: req.user._id,
@@ -127,7 +125,7 @@ const createManualDeposit = async (req, res) => {
       reference,
       paymentMethod: 'manual_bank',
       bankName: bankName || 'Moniepoint',
-      screenshot: req.file.path,
+      narration,
       isActivationFee: isActivation,
     });
 
@@ -138,6 +136,7 @@ const createManualDeposit = async (req, res) => {
         amount: deposit.amount,
         reference: deposit.reference,
         status: deposit.status,
+        narration: deposit.narration,
       },
     });
   } catch (error) {

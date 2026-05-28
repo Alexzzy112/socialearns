@@ -1,7 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { HiCash, HiCheck, HiX, HiTrash, HiEye } from 'react-icons/hi';
+import { HiCash, HiCheck, HiX, HiTrash } from 'react-icons/hi';
 import DashboardLayout from '@/components/DashboardLayout';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import API from '@/lib/axios';
@@ -98,7 +98,7 @@ export default function AdminDeposits() {
             <tr className="border-b border-gray-100 dark:border-gray-700">
               <th className="text-left py-3 px-4 font-semibold text-gray-500 dark:text-gray-400">User</th>
               <th className="text-left py-3 px-4 font-semibold text-gray-500 dark:text-gray-400">Amount</th>
-              <th className="text-left py-3 px-4 font-semibold text-gray-500 dark:text-gray-400">Reference</th>
+              <th className="text-left py-3 px-4 font-semibold text-gray-500 dark:text-gray-400">Reference / Narration</th>
               <th className="text-left py-3 px-4 font-semibold text-gray-500 dark:text-gray-400">Method</th>
               <th className="text-left py-3 px-4 font-semibold text-gray-500 dark:text-gray-400">Date</th>
               <th className="text-left py-3 px-4 font-semibold text-gray-500 dark:text-gray-400">Status</th>
@@ -113,7 +113,14 @@ export default function AdminDeposits() {
                   <p className="text-xs text-gray-500 dark:text-gray-400">{d.user?.email}</p>
                 </td>
                 <td className="py-3 px-4 font-medium text-green-600">₦{d.amount?.toLocaleString() || '0'}</td>
-                <td className="py-3 px-4 text-xs font-mono">{d.reference || '-'}</td>
+                <td className="py-3 px-4">
+                  <p className="text-xs font-mono">{d.reference || '-'}</p>
+                  {d.narration && (
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 truncate max-w-[200px]" title={d.narration}>
+                      {d.narration}
+                    </p>
+                  )}
+                </td>
                 <td className="py-3 px-4">
                   <span className="text-xs font-semibold px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300">
                     {d.method || d.paymentMethod || '-'}
@@ -138,17 +145,6 @@ export default function AdminDeposits() {
                 </td>
                 <td className="py-3 px-4">
                   <div className="flex gap-2">
-                    {d.screenshot && (
-                      <a
-                        href={d.screenshot}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 hover:bg-blue-200 dark:hover:bg-blue-900/50 transition-colors"
-                        title="View Receipt"
-                      >
-                        <HiEye className="w-4 h-4" />
-                      </a>
-                    )}
                     {d.status === 'pending' && (
                       <>
                         <button onClick={() => handleAction(d._id, 'approve')} className="p-2 rounded-lg bg-green-100 dark:bg-green-900/30 text-green-600 hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors" title="Approve">
