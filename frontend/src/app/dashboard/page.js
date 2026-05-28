@@ -146,6 +146,36 @@ export default function DashboardPage() {
         </Link>
       </div>
 
+      {data?.announcements?.length > 0 && (
+        <div className="card mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold">Announcements</h2>
+            <Link href="/notifications" className="text-sm text-blue-600 hover:underline">View All</Link>
+          </div>
+          <div className="space-y-3">
+            {data.announcements.map((a) => (
+              <div key={a._id} className={`p-4 rounded-xl border-l-4 ${
+                a.type === 'urgent' ? 'border-l-red-500 bg-red-50 dark:bg-red-900/20' :
+                a.type === 'warning' ? 'border-l-yellow-500 bg-yellow-50 dark:bg-yellow-900/20' :
+                a.type === 'success' ? 'border-l-green-500 bg-green-50 dark:bg-green-900/20' :
+                'border-l-blue-500 bg-blue-50 dark:bg-blue-900/20'
+              }`}>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${
+                    a.type === 'urgent' ? 'bg-red-100 dark:bg-red-900/30 text-red-600' :
+                    a.type === 'warning' ? 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-600' :
+                    a.type === 'success' ? 'bg-green-100 dark:bg-green-900/30 text-green-600' :
+                    'bg-blue-100 dark:bg-blue-900/30 text-blue-600'
+                  }`}>{a.type}</span>
+                  <p className="font-semibold text-sm">{a.title}</p>
+                </div>
+                <p className="text-sm text-gray-600 dark:text-gray-300">{a.content}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       <div className="card">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-bold">Recent Activity</h2>

@@ -51,7 +51,7 @@ export default function AdminAnnouncements() {
       setType('info');
       fetchAnnouncements();
     } catch (err) {
-      console.error(err);
+      toast.error(err.response?.data?.message || 'Failed to send announcement');
     } finally {
       setSubmitting(false);
     }

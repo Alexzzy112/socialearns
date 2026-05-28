@@ -6,15 +6,7 @@ const taskSchema = new mongoose.Schema(
     description: { type: String, required: true },
     category: {
       type: String,
-      enum: [
-        'like_post',
-        'comment_post',
-        'follow_account',
-        'share_post',
-        'subscribe_youtube',
-        'join_whatsapp',
-        'join_telegram',
-      ],
+      enum: ['Like', 'Comment', 'Follow', 'Share', 'YouTube', 'WhatsApp', 'Telegram'],
       required: true,
     },
     reward: { type: Number, required: true },

@@ -37,6 +37,8 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
+const Announcement = require('../models/Announcement');
+
 const getUserDashboard = async (req, res) => {
   try {
     const user = await User.findById(req.user._id)
@@ -46,6 +48,7 @@ const getUserDashboard = async (req, res) => {
     const wallet = await Wallet.findOne({ user: user._id });
     const today = new Date();
     today.setHours(0, 0, 0, 0);
+    const announcements = await Announcement.find().sort('-createdAt').limit(5);
 
     res.json({
       stats: {
@@ -59,6 +62,7 @@ const getUserDashboard = async (req, res) => {
         dailyEarnings: user.dailyEarnings,
       },
       wallet,
+      announcements,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
