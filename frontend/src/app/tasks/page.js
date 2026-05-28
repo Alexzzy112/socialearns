@@ -132,7 +132,7 @@ export default function TasksPage() {
                 onClick={() => setSelectedTask(task)}
                 className="btn-primary w-full text-center"
               >
-                Submit Proof
+                Start Task
               </button>
             </div>
           ))}
@@ -143,15 +143,47 @@ export default function TasksPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50" onClick={() => setSelectedTask(null)}>
           <div className="card max-w-lg w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold">Submit Proof</h2>
+              <h2 className="text-xl font-bold">{selectedTask.title}</h2>
               <button onClick={() => setSelectedTask(null)} className="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
             </div>
-            {selectedTask.instructions && (
-              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-6">
-                <p className="text-sm font-medium mb-2">Instructions:</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">{selectedTask.instructions}</p>
+
+            <div className="flex items-center gap-2 mb-4">
+              <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ${categoryColors[selectedTask.category] || ''}`}>
+                {selectedTask.category}
+              </span>
+              <span className="text-xl font-bold text-green-600">₦{selectedTask.reward?.toLocaleString() || '0'}</span>
+            </div>
+
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">{selectedTask.description}</p>
+
+            {selectedTask.requirements && (
+              <div className="bg-yellow-50 dark:bg-yellow-900/20 rounded-lg p-4 mb-4">
+                <p className="text-sm font-medium mb-1">Requirements:</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">{selectedTask.requirements}</p>
               </div>
             )}
+
+            {selectedTask.targetUrl && (
+              <a
+                href={selectedTask.targetUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors mb-4"
+              >
+                <HiExternalLink className="w-5 h-5" /> Perform Task
+              </a>
+            )}
+
+            {selectedTask.instructions && (
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 mb-4">
+                <p className="text-sm font-medium mb-2">Instructions:</p>
+                <p className="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-wrap">{selectedTask.instructions}</p>
+              </div>
+            )}
+
+            <hr className="border-gray-200 dark:border-gray-600 mb-4" />
+            <p className="text-sm font-medium mb-3">Submit Proof of Completion</p>
+
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium mb-2">Screenshot</label>
