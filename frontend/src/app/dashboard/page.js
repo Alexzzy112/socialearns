@@ -1,18 +1,20 @@
 'use client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { HiCash, HiBadgeCheck, HiClock, HiUserGroup, HiUsers, HiArrowRight } from 'react-icons/hi';
+import { HiCash, HiBadgeCheck, HiClock, HiUserGroup, HiUsers, HiArrowRight, HiShieldCheck, HiCurrencyDollar } from 'react-icons/hi';
 import DashboardLayout from '@/components/DashboardLayout';
 import { StatCard } from '@/components/DashboardCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import API from '@/lib/axios';
 import { useAuth } from '@/store/AuthContext';
+import toast from 'react-hot-toast';
 
 export default function DashboardPage() {
   const { user } = useAuth();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activating, setActivating] = useState(false);
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -27,6 +29,23 @@ export default function DashboardPage() {
     };
     fetchDashboard();
   }, []);
+
+  const handleActivateNow = async () => {
+    if (!confirm('Activate your account with N1,500 from your wallet balance?')) return;
+    setActivating(true);
+    try {
+      const { data: res } = await API.post('/wallet/activate');
+      toast.success(res.message || 'Account activated!');
+      setData((prev) => prev ? {
+        ...prev,
+        stats: { ...prev.stats, walletBalance: prev.stats.walletBalance - 1500 },
+      } : prev);
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Activation failed');
+    } finally {
+      setActivating(false);
+    }
+  };
 
   if (loading) return <DashboardLayout><LoadingSpinner /></DashboardLayout>;
   if (error) return (
@@ -60,6 +79,39 @@ export default function DashboardPage() {
           <StatCard key={stat.label} icon={stat.icon} label={stat.label} value={stat.value} color={stat.color} />
         ))}
       </div>
+
+      {!user?.isAccountActivated && (
+        <div className="mb-8">
+          {data?.wallet && data.wallet.balance >= 1500 ? (
+            <div className="card bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 flex items-center justify-between gap-4 p-4">
+              <div className="flex items-center gap-3">
+                <HiShieldCheck className="w-6 h-6 text-green-600 dark:text-green-400 flex-shrink-0" />
+                <div>
+                  <p className="font-semibold text-green-800 dark:text-green-200">Ready to activate!</p>
+                  <p className="text-sm text-green-600 dark:text-green-400">You have enough balance to activate your account.</p>
+                </div>
+              </div>
+              <button
+                onClick={handleActivateNow}
+                disabled={activating}
+                className="bg-green-600 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-green-700 transition-colors text-sm whitespace-nowrap"
+              >
+                {activating ? 'Activating...' : 'Activate Now'}
+              </button>
+            </div>
+          ) : (
+            <div className="card bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 flex items-center gap-3 p-4">
+              <HiCurrencyDollar className="w-6 h-6 text-yellow-600 dark:text-yellow-400 flex-shrink-0" />
+              <div>
+                <p className="font-semibold text-yellow-800 dark:text-yellow-200">Account not activated</p>
+                <p className="text-sm text-yellow-600 dark:text-yellow-400">
+                  Fund your wallet with ₦1,500 to activate your account and start earning!
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         <Link href="/tasks" className="card flex items-center gap-4 hover:shadow-lg transition-all duration-300 group">

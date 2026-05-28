@@ -57,9 +57,7 @@ export default function TasksPage() {
       const formData = new FormData();
       if (screenshot) formData.append('screenshot', screenshot);
       if (proofUrl) formData.append('url', proofUrl);
-      await API.post(`/tasks/${selectedTask._id}/submit`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      await API.post(`/tasks/${selectedTask._id}/submit`, formData);
       setSelectedTask(null);
       setScreenshot(null);
       setProofUrl('');

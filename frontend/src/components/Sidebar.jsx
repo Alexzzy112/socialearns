@@ -38,6 +38,7 @@ export default function Sidebar({ isOpen, onClose }) {
     { href: '/admin/withdrawals', label: 'Withdrawals', icon: HiCurrencyDollar },
     { href: '/admin/deposits', label: 'Deposits', icon: HiCash },
     { href: '/admin/announcements', label: 'Announce', icon: HiSpeakerphone },
+    { href: '/admin/settings', label: 'Settings', icon: HiCog },
   ];
 
   const isAdmin = user?.role === 'admin';
@@ -71,7 +72,11 @@ export default function Sidebar({ isOpen, onClose }) {
           </div>
 
           <div className="pt-4 border-t border-gray-100 dark:border-gray-800 space-y-1">
-            {!isAdmin && (
+            {isAdmin ? (
+              <Link href="/admin/settings" onClick={onClose} className="sidebar-link">
+                <HiCog className="w-5 h-5" /> Settings
+              </Link>
+            ) : (
               <Link href="/dashboard/settings" onClick={onClose} className="sidebar-link">
                 <HiCog className="w-5 h-5" /> Settings
               </Link>

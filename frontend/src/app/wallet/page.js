@@ -90,9 +90,7 @@ export default function WalletPage() {
       formData.append('screenshot', receipt);
       formData.append('amount', BANK_DETAILS.amount.toString());
       formData.append('bankName', BANK_DETAILS.bank);
-      await API.post('/deposits/manual', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
+      await API.post('/deposits/manual', formData);
       toast.success('Deposit request submitted! Awaiting admin approval.');
       setShowFund(false);
       setReceipt(null);

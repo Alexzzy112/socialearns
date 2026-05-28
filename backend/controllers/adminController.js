@@ -240,7 +240,17 @@ const activateUserAccount = async (req, res) => {
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
+    if (user.isAccountActivated) {
+      return res.status(400).json({ message: 'Account is already activated' });
+    }
+
     const amount = parseInt(process.env.ACTIVATION_FEE || '1500');
+
+    const wallet = await Wallet.findOne({ user: user._id });
+    if (!wallet || wallet.balance < amount) {
+      return res.status(400).json({ message: `Insufficient balance. User needs at least N${amount.toLocaleString()} in their wallet.` });
+    }
+
     await debitWallet(user._id, amount, `Account activation fee: N${amount.toLocaleString()}`);
 
     user.isAccountActivated = true;
