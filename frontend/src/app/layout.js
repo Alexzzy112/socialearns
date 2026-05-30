@@ -2,6 +2,7 @@ import './globals.css';
 import { AuthProvider } from '@/store/AuthContext';
 import { ThemeProvider } from '@/store/ThemeContext';
 import { Toaster } from 'react-hot-toast';
+import AdsterraPopunder from '@/components/AdsterraPopunder';
 
 export const metadata = {
   title: 'SocialEarn - Earn Money from Social Media Tasks',
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
         <link rel="apple-touch-icon" href="/icon.svg" />
       </head>
       <body>
+        <AdsterraPopunder />
         <ThemeProvider>
           <AuthProvider>
             <Toaster
