@@ -51,7 +51,7 @@ export default function AdminDeposits() {
   const handleDelete = async (id) => {
     if (!confirm('Delete this deposit?')) return;
     try {
-      await API.delete(`/admin/deposits/${id}`);
+      await API.put(`/admin/deposits/${id}/delete`);
       toast.success('Deposit deleted');
       fetchDeposits();
     } catch (err) {

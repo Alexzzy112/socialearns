@@ -51,7 +51,7 @@ export default function AdminWithdrawals() {
   const handleDelete = async (id) => {
     if (!confirm('Delete this withdrawal?')) return;
     try {
-      await API.delete(`/admin/withdrawals/${id}`);
+      await API.put(`/admin/withdrawals/${id}/delete`);
       toast.success('Withdrawal deleted');
       fetchWithdrawals();
     } catch (err) {

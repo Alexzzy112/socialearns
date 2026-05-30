@@ -71,7 +71,7 @@ app.use((req, res, next) => {
     if (!responded) { clearTimeout(timeout); next(); }
   };
   if (mongoose.connection.readyState === 1) return onConnected();
-  mongoose.connection.once('connected', onConnected);
+  mongoose.connection.on('connected', onConnected);
 });
 
 app.use('/api/auth', authLimiter);
